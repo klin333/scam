@@ -1,11 +1,11 @@
 useDynLib(scam, .registration = TRUE, .fixes = "C_")
 
-export(scam, bfgs_gcv.ubre, 
-       derivative.scam, 
+export(scam, bfgs_gcv.ubre,
+       derivative.scam,
        gcv.ubre_grad,
        scam.check, scam.control,
-       scam.fit, 
-       plot.scam, predict.scam, 
+       scam.fit,
+       plot.scam, predict.scam,
        print.scam,
        check.analytical,
        summary.scam, print.summary.scam, vis.scam,
@@ -107,7 +107,7 @@ power,predict,printCoefmat,quantile,
 qbeta,qbinom,qchisq,qnbinom,qgamma,qnorm,qpois,qqline,qqnorm,qqplot,
 reformulate,residuals,
 rbeta,rbinom,rgamma,rnbinom,rnorm,rpois,runif,sd,
-termplot,terms.formula,terms,uniroot,var,vcov,weights)
+termplot,terms.formula,terms,uniroot,var,vcov,weights,start)
 
 
 import(Matrix)
