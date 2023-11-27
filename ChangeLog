@@ -1,0 +1,232 @@
+
+1.2-14
+*** scam.fit1, scam.fit.post1: a new method is implemented to fit SCAM using a quasi-Newton method, the BFGS method (as an alternative to the Newton method) to minimize penalized deviance wrt model coefficients. This requires only first order derivatives of the log likelihood. The calculation of the edf and tr(A) is done once after fit, using analytical Hessian (taking 2nd order deriv of the log likelihood). The smoothing parameter is selected by efsudr.scam2() which requires the first derivatives of the deviance and tr(A) w.r.t. log(sp). Analytical (rather than approximate) expression of the Hessian is used here.
+
+** efsudr.scam2: i) added extended Fellner-Schall method for regular families, with PIRLS/full-Newton method used for the coefficient estimation, performed by scam.fit(). Here only the first and the second order derivatives of the log likelihood are used when calculating the derivatives of the edf. The dependence of H on lambda is neglected.
+               ii) added extended Fellner-Schall method for regular families, with a quasi-Newton/BFGS method 
+performed by scam.fit1() for the coefficient estimation. The dependence of H on lambda is neglected. 
+
+* efsudr.scam: extended Fellner-Schall method now works for smoothing parameter selection by minimizing UBRE when scale parameter is known (as it is in the inner optimization). Also gcv expression in the efs update now includes the 'gamma' parameter. In this implementation the third order derivatives of the log likelihood are used when calculating the derivatives of the edf.
+
+* small coding fixes with 'gamma' parameter as input argument of the fitting function; bug fixed in simulation example in predict.scam.Rd file. 
+
+* estimate.scam: bug fixed with the call when the smoothing parameter is specified, which occurs with the newly introduced optimization method. Thanks to Pierre Masselot. Also small coding fixes when the sp is supplied: now the model fit is done within estimate.gam() function. 
+
+
+1.2-13
+* smooth.construct: added option of cyclic cubic regression spline ("cc") in the 'tesmd1', 'tesmd2', and 'tesmi2' smoothers as an alternative marginal basis along the otherwise unconstrained marginal smooth.
+
+* plot.scam: bug fixed with plot methods for the smooths of the package mgcv, such as, Markov random fields bs="mrf", factor smooth interactions "fs", Gaussian process smooths bs="gp", splines on the sphere bs="sos", Duchon splines bs="ds". Thanks Alessia Eletti for reporting the bug. 
+
+
+1.2-12
+* smooth.construct: added option for cyclic cubic regression spline ("cc") in the 'tesmi1', tensor product bivariate smooth with increasing constraint in the first covariate. Thanks Eli Asarian for bringing this up.
+
+*scam.fit: bug fixed with starting values of the model coefficients. Thanks Charlie Song for reporting the bug.
+  
+
+1.2-11 
+* gcv.ubre_grad, scam.fit: bug fixed with vector dimensions when working with linear functional terms. Thanks to  
+Paul Rosenfield for reporting the bug.
+
+* summary.scam: corrections made when reporting results for parametric  factor terms.
+
+* linear.functional.terms: shape constrained examples corrected, decreasing and increasing terms are now correctly specified using SCOP-splines without identifiability constraints (bs="mpdBy", bs="mpiBy"). An example with convex term is added (bs="cxBy"). Thanks to Paul Rosenfield for pointing out the bug.
+
+* smooth.construct: added shape constrained smoothers: 'mpiBy', 'mpdBy', 'cxBy', 'cvBy', 'micxBy', 'micvBy', 'mdcxBy', 'mdcvBy' to be used with SCOP-splines with non-constant 'by' variable, and with linear functionals terms. In presence of non-constant 'by' variable the terms are fully identifiable, so they are left unconstrained (without imposing 'zero intercept' constraint). Thanks to Paul Rosenfield for pointing out the bug when 'cx' is used with linear functional terms.
+
+
+1.2-10 
+* plot.scam: now silently returns a list of plotting data in the same way as plot.gam(mgcv), to help users to produce customized plot. Thanks to Raphael Knevels.
+
+
+1.2.9
+* smooth.construct: added 'miso' smooth, a monotone increasing SCOP-spline with an additional 'start-at-zero' constraint, a smooth should be zero at the left-end point of the covariate range. Thanks to Sean Wu for bringing this up.
+
+* smooth.construct: added 'mifo' smooth, a monotone increasing SCOP-spline with an additional 'finish-at-zero' constraint, a smooth should be zero at the right-end point of the covariate range. Care should be taken when using this smooth (see manual)
+
+
+1.2-8
+* predict.scam: bug fixed with restricting the number of samples to be > 1000. Thanks to Armin Rauschenberger for reporting the bug.
+
+1.2-7
+
+* bfgs_gcv.ubre: a bug with setting 'ct' values has been fixed. Thanks Joe Robinson and Giampiero Marra. 
+
+* predict.scam: the function now mirrors the behaviour of predict.gam(mgcv) when dealing with factor variables. Thanks Giampiero Marra for bringing the issue up.   
+
+
+1.2-6
+
+* An AR1 error model has been added. This can be used for the residuals of Gaussian-identity link models only. Standardized residuals (approximately uncorrelated under correct model) returned in 'std.rsd'. 
+
+* vis.scam.Rd: Factor 'by' variable example with increasing smooths has been added.
+
+* smooth.construct: tidied up coding for setting Sigma matrices, p.ident; bug fixed with the smooth contructor 'po'. 
+
+* predict.scam, plot.scam: corrected for the smooth 'po'. a `constant' attribute has been corrected to the object returned by predict.scam(...,type="terms"), to match what is returned to what `predict.gam' would do.
+
+* plot.scam: scop-spline smooths are now centred when being plotted to be in line with unconstrained smooths. Although 'zeroed intercept' constraint is applied to fit the scam model. 
+
+* scam.fit: improved routine for SCAM coefficients estimation  via the Newton-Raphson method; step halving under non-finite deviance, checking convergence adequately, trace option for some de-bugging information, etc.
+
+* scam.control: control structure for scam is now being passed on in more efficient way.
+
+* scam.Rd: added output values convergence info 
+
+* bfgs_gcv.ubre: slightly improved routine to give faster convergence
+
+* predict.scam: fix of handling newdata with a single row, prediction with 1001 rows, 2002 rows, etc., when 'terms' supplied. fixed by adding missed [,,drop=FALSE] in predict.scam. Thanks Timothy Hyndman.  
+
+* fix to fitting and predicting models of the form y~1
+
+
+
+1.2-5
+
+* estimate.scam: Extended Fellner-Schall optimizer for smoothing parameter selection is now available using scam(...,optimizer="efs") as in gam(mgcv). But rather than minimizing REML (in gam(mgcv)) it minimizes GCV criterion.
+
+* bfgs_gcv.ubre: bug fixed to avoid zero eigenvalues. Thanks to Pierre Masselot for reporting the bug.
+
+
+1.2-4
+
+* scam.control: function added. This allows control of the numerical options for fitting a SCAM in the similar way as gam.control(mgcv). scam, scam.fit, estimate.scam, bfgs_gcv.ubre, gcv.ubre_grad, check.analytical routines were corrected to account for scam.control setting.
+
+* linear.functional.terms.Rd: examples corrected.
+
+* scam: setting 'devtol'/'steptol' values corrected. Thanks to Haibo Chen for reporting the bug.
+
+* scam: setting 'weights' corrected. Thanks to Haibo Chen for reporting the bug.
+
+* scam: scam setup is changed. clone of the gam setup of gam(mgcv). 
+
+* *.Rd: examples for bivariate smothing constructors updated.
+
+
+1.2-3
+
+* scam.Rd: example with random effect corrected. Thank you to Alan Cobo-Lewis.  
+
+* smooth.construct: three tensor product smoothing constructors for bivariate functions subject to shape constraints were added: 'tecxcx','tecvcv', 'tecxcv'. Thanks to Leire Citores for bringing this up.
+
+* summary.scam: corrected summary info for the test statistic and p-value for very small edf. Also removed line for the score info in case of supplied sp value.
+
+* scam-package.Rd: updated content to be in sync with the actual package metadata in the DESCRIPTION file.
+
+
+
+1.2-2
+
+* print.scam, summary.scam: changed the printing info about edf, they are now rounded up.
+
+* logLik.scam: function added (clone of logLik.gam (mgcv)). Thanks to Jorge Guevara for raising a question about that.
+
+* scam: bug fix with manually setting knots of the spline. Example added to smooth.construct.mpi.smooth.spec.Rd file. Thanks to Matthew Harris for reporting the issue.  
+
+* formula.scam: function added, returns the scam formula. Thanks to Renke von Seggern for reporting the bug.
+
+* scam.check: bug fix with setting 'pch' explicitly. Thanks to Renke von Seggern for reporting the bug.
+
+* plot.scam: bug fix with plotting the residuals which had a shift of an intercept. Thanks to John Kornak for reporting the bug.
+
+
+1.2-1
+
+* bfgs_gcv.ubre, estimate.scam: bug fix with supplying the value of 'gamma' which was overridden by a default 'gamma=1'. Thanks to Phil Boonstra for reporting the bug and providing an example.
+
+* smooth.construct: a univariate positively constrained smooth, 'po', was added.
+
+* added 'linear.functional.terms' with shape constraints example to an Rd file (see linear.functional.terms(mgcv))
+
+
+1.2-0
+
+* smooth.construct: six tensor product smoothing constructors for bivariate functions subject to shape constraints were added: 'temicx','temicv', 'tedecx', 'tedecv', 'tescx', 'tescv'. Thanks to Linda Mhalla for bringing this up.
+
+* anova.scam: added (clone of anova.gam (mgcv)). Thanks to Felix Meyer for raising a question about that.
+
+* plot.scam: fits are now centralized (by subscracting the mean of the smooth term)
+
+
+
+1.1-9
+
+* scam.r, bfgs.r, estimate.scam.r, check.analytical.r: corrected environmental variable
+
+* plot.scam: can now plot random effect smoother. Thanks to Ondřej Mikula for bringing up the issue.
+  plot.scam is now a clone of the 'new' version of plot.gam().
+
+* predict.scam: type="iterms" is added to return standard errors for unconstrained smooth components that include the uncertainty about the intercept/overall mean ("iterms" was commented in an .Rd file of the previous versions but not implemented) 
+Thanks to Ondřej Mikula for reporting the issue
+
+* S3 methods predict.scam residuals.scam are registered now (in 'NAMESPACE' file)
+
+* scam: corrected use of an 'offset' variable, the one that is outside of the formula. Previously it was not recognized by scam. Thanks to Amy Morin for reporting the bug and providing an example. 
+
+
+1.1-8
+
+* summary.scam: corrected dimension of the variance matrix Vb which sometimes sent an error
+
+* scam.fit: bug fix with coding the term 'QtQRER' needed for the fitting procedure
+
+* scam-package: the EPSRC NCSE grant is acknowledged in the \reference section
+
+
+
+1.1-7
+
+* bug fix in scam which could fail when the smoothing parameter values are supplied in 'sp'
+          argument to 'scam'. ('sp' values supplied to the smooth term 's' are ignored by 'scam')
+          Thanks to Noel G. Cadigan for reporting the bug.
+
+* References fixes in .Rd files
+
+
+
+1.1-6
+
+* Namespace, Description fixed
+
+* vis.scam: added, copied from vis.gam(mgcv) 
+
+* scam: added additional returned elements of the fitted scam object: `aic', `df.residual', `df.null', `min.edf', object$call (needed for update to work), 'var.summary' (needed for vis.scam), `R', `edf1'.
+   added keepData argument as input, if FALSE (default) the original data removed to save space. 
+   removed object$X (model matrix) from return/output list to save space. model.matrix() added as in gam(), correspondingly summary.scam() and predict.scam() were corrected to replace object$X by model.matrix(object). 
+
+* scam.fit: `Rrank' is now an exported object of mgcv 
+
+* scam.check: added extra graphics parameters (...) to pass to plotting functions (like pch,cex);  added qqline() with colours in qqnorm() plot
+
+* plot.scam: corrected number of plots per page and plotting any parametric terms when "all.terms=TRUE" as in plot.gam() (although plot.scam is based on the old version of plot.gam()).
+
+* derivative.scam: this function replaced derivative.smooth(). It
+works only for univariate smooths at the moment, with finite differencing approximations for unconstrained smooths.
+
+* summary.scam: corrected the value of the adjusted R-sq as in gam(mgcv), fixed Ref.df to be the same as in summary.gam(),
+  the code was corrected to be in line with summary.gam()
+
+* scam.fit.post: corrected the value of the null deviance, added the null degrees of freedom, removed the value `TRUE' for intercept to correct the values of the deviance explaned and null.df for models without intercept.
+
+* extrapolate.uni.scam: this function has been removed from the package since predict.scam does linear extrapolation
+
+
+
+1.1-5
+
+* Predict.matrix.**.smooth 
+
+For all univariate and bivariate SCOP-splines Prediction method now allows prediction outside range of knots, and use linear extrapolation in this case
+
+
+
+1.1-4
+
+* scam.fit: svd replaced with QR + svd if needed approach, 
+  large number of O(nq^2) products that were not needed removed, removal of multiple un-necessary loops.
+
+* gcv.ubre_grad tidied, terms collected in derivative of trace (8 goes to 6), derivative of trace computations restuctured to reduce O(nq^2) operations from 6 per derivative to 4 up front.
+
+* predict.scam: line for reference to extrapolate.uni.scam corrected with "if.. " for uni case only
+
